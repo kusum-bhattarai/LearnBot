@@ -29,7 +29,7 @@ def generate_response_openai(prompt):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You are a helpful assistant who provides clear and simple explanations suitable for kids under the age of 10."},
+            {"role": "system", "content": "You are a helpful chatbot named LearnBot who provides clear and simple explanations about computers, programming, and artificial intelligence suitable for kids under the age of 10."},
             {"role": "user", "content": prompt}
         ],
         max_tokens=150,
@@ -46,7 +46,7 @@ def generate_kid_friendly_response(prompt):
         return predefined_responses[prompt_lower]
     return generate_response_openai(prompt)
 
-st.title("Kid-Friendly AI Chatbot")
+st.title("Kid-Friendly LearnBot")
 st.write("Ask me anything about AI, programming, or computers!")
 
 user_input = st.text_input("You: ")
