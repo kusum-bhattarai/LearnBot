@@ -2,7 +2,13 @@
 import streamlit as st
 import openai
 
-openai.api_key = "myapikey"
+secrets = """
+[api_keys]
+openai_key = "MY_API_KEY"
+"""
+
+os.environ["OPENAI_API_KEY"] = st.secrets["api_keys"]["openai"]
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 predefined_responses = {
   "what is ai": "Artificial Intelligence (AI) is when computers or robots can do tasks that usually need human thinking, like recognizing pictures or playing games.",
@@ -40,16 +46,22 @@ def generate_response_openai(prompt):
     )
     return response.choices[0].message['content'].strip()
 
-def generate_kid_friendly_response(prompt):
-    prompt_lower = prompt.lower()
-    if prompt_lower in predefined_responses:
-        return predefined_responses[prompt_lower]
-    return generate_response_openai(prompt)
-
-st.title("Kid-Friendly LearnBot")
+st.title("Kid-Friendly AI LearnBot")
 st.write("Ask me anything about AI, programming, or computers!")
 
+if 'chat_history' not in st.session_state:
+    st.session_state.chat_history = []
+
 user_input = st.text_input("You: ")
-if user_input:
-    response = generate_kid_friendly_response(user_input)
-    st.write("Bot:", response)
+if st.button("Send"):
+    if user_input:
+        response = predefined_responses.get(user_input.lower(), generate_response_openai(user_input, st.session_state.chat_history))
+        st.session_state.chat_history.append({"role": "user", "content": user_input})
+        st.session_state.chat_history.append({"role": "assistant", "content": response})
+
+if st.session_state.chat_history:
+    for chat in st.session_state.chat_history:
+        if chat["role"] == "user":
+            st.write(f"You: {chat['content']}")
+        else:
+            st.write(f"Bot: {chat['content']}")
