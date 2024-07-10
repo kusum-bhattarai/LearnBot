@@ -2,7 +2,7 @@
 import streamlit as st
 import openai
 
-openai.api_key = "YOUR_API_KEY"
+openai.api_key = "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"
 
 predefined_responses = {
   "what is ai": "Artificial Intelligence (AI) is when computers or robots can do tasks that usually need human thinking, like recognizing pictures or playing games.",
